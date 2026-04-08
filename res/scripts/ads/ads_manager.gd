@@ -66,7 +66,9 @@ func _grant_reward() -> void:
 	# Emitir señal de recompensa
 	ad_reward_granted.emit(pending_reward, reward_amount)
 	
-	print("AD REWARD: %s x%d" % [RewardType.keys()[pending_reward], reward_amount])
+	var reward_type_names = {RewardType.COINS: "COINS", RewardType.CARDS: "CARDS"}
+	var reward_name = reward_type_names.get(pending_reward, "UNKNOWN")
+	print("AD REWARD: %s x%d" % [reward_name, reward_amount])
 
 ## Llamado si el usuario salta/cierra el anuncio
 func _on_ad_skipped() -> void:

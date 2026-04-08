@@ -20,6 +20,7 @@ var save_data: SaveData
 var anti_cheat: AntiCheat
 var secure_save: SecureSave
 var game_mode: GameMode
+var catalog_validator: CatalogValidator = CatalogValidator.new()  # ← Nuevo validator
 
 var base_hp := [BASE_HP, BASE_HP]
 var coins := [0, 0]
@@ -33,6 +34,13 @@ var game_ended := false
 
 func _ready() -> void:
 	rng.randomize()
+	
+	# ✓ VALIDAR CATÁLOGO BASE UNA SOLA VEZ
+	# Si falla, abortamos el juego (no tiene sentido continuar sin catálogo válido)
+	if not catalog_validator.validate_entire_catalog(CardDatabase.get_card_data()):
+		push_error("CRITICAL: CardDatabase validation failed - aborting game initialization")
+		get_tree().quit(1)
+		return
 	
 	# Inicializar sistema de modo de juego
 	game_mode = GameMode.new()

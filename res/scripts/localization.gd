@@ -35,8 +35,7 @@ func set_language(lang: String) -> void:
 	current_language = lang
 	
 	# Usa el sistema de traducción de Godot
-	if TranslationServer:
-		TranslationServer.set_locale(lang)
+	TranslationServer.set_locale(lang)
 	
 	emit_signal("language_changed", lang)
 

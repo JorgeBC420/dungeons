@@ -15,6 +15,7 @@ var crypto = Crypto.new()
 var anti_cheat: AntiCheat
 var game_mode: GameMode
 var _device_encryption_key: String = ""  # Se genera/carga en _ready()
+var save_validator: SaveValidator = SaveValidator.new()  # ← Nuevo validator
 
 func _ready() -> void:
 	anti_cheat = AntiCheat.new()
@@ -33,7 +34,7 @@ func save_player_data(save_data: SaveData) -> bool:
 		return false
 	
 	# Crear backup
-	if ResourceLoader.exists(SAVE_PATH):
+	if FileAccess.file_exists(SAVE_PATH):
 		var err = DirAccess.copy_absolute(SAVE_PATH, SAVE_BACKUP_PATH)
 		if err != OK:
 			push_warning("Failed to create backup: %d" % err)
@@ -74,7 +75,7 @@ func save_player_data(save_data: SaveData) -> bool:
 func load_player_data() -> SaveData:
 	"""Carga los datos del jugador de forma segura"""
 	
-	if not ResourceLoader.exists(SAVE_PATH):
+	if not FileAccess.file_exists(SAVE_PATH):
 		print("No existing save file found")
 		return null
 	
@@ -173,7 +174,7 @@ func _get_or_create_device_key() -> String:
 	Se almacena en user://calabozos_device.key
 	"""
 	# Si ya existe, cargar la clave guardada
-	if ResourceLoader.exists(DEVICE_KEY_PATH):
+	if FileAccess.file_exists(DEVICE_KEY_PATH):
 		var file = FileAccess.open(DEVICE_KEY_PATH, FileAccess.READ)
 		if file != null:
 			var stored_key = file.get_as_text()
@@ -226,37 +227,15 @@ func _validate_save_data(save_data: SaveData) -> bool:
 	return true
 
 func _validate_loaded_data(data: Dictionary) -> bool:
-	"""Valida que los datos cargados sean legítimos"""
-	
-	if not data.has("inventory") or not data.has("coins"):
-		return false
-	
-	if typeof(data.coins) != TYPE_INT:
-		return false
-	
-	# Validar estructura del inventario cargado
-	if typeof(data.inventory) != TYPE_DICTIONARY:
-		return false
-	
-	for card_id in data.inventory.keys():
-		var card_info = data.inventory[card_id]
-		
-		if not typeof(card_info) == TYPE_DICTIONARY:
-			return false
-		
-		# Validar que los campos son tipos válidos
-		if card_info.has("level") and typeof(card_info.level) != TYPE_INT:
-			return false
-		
-		if card_info.has("copies") and typeof(card_info.copies) != TYPE_INT:
-			return false
-	
-	return true
+	"""Valida que los datos cargados sean legítimos
+	Delega a SaveValidator para validación consistente
+	"""
+	return save_validator.validate_save_data(data)
 
 func _load_from_backup() -> SaveData:
 	"""Intenta cargar desde el backup si la carga principal falla"""
 	
-	if not ResourceLoader.exists(SAVE_BACKUP_PATH):
+	if not FileAccess.file_exists(SAVE_BACKUP_PATH):
 		print("No backup file found - starting fresh")
 		return null
 	
@@ -320,7 +299,7 @@ func _mark_cloud_synced(timestamp: int) -> void:
 
 ## Obtiene la última hora de sincronización con la nube
 func get_last_cloud_sync() -> int:
-	if not ResourceLoader.exists(CLOUD_SYNC_MARKER):
+	if not FileAccess.file_exists(CLOUD_SYNC_MARKER):
 		return 0
 	
 	var file = FileAccess.open(CLOUD_SYNC_MARKER, FileAccess.READ)
@@ -351,6 +330,6 @@ func get_sync_status() -> Dictionary:
 
 ## Limpia marcas de sincronización (cuando se cierra sesión)
 func clear_cloud_sync() -> void:
-	if ResourceLoader.exists(CLOUD_SYNC_MARKER):
+	if FileAccess.file_exists(CLOUD_SYNC_MARKER):
 		DirAccess.remove_absolute(CLOUD_SYNC_MARKER)
 	print("Cloud sync markers cleared")

@@ -1,16 +1,12 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
 ; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
-
-[application]
-
-config/name="Calabozos: Guerra de Facciones"
-config/description="A two-player card battle game featuring three factions: Humans, Orcs, and Elves"
-run/main_scene="res://scenes/Main.tscn"
-config/features=PackedStringArray("4.0", "4.1")
-config/icon="res://icon.svg"
 
 [android]
 
@@ -23,23 +19,27 @@ min_sdk=21
 target_sdk=31
 orientation="portrait"
 xr_features/xr_mode=0
+gradle_dependencies/custom_maven_repositories=PackedStringArray()
+gradle_dependencies/dependencies=PackedStringArray()
 
-[android/gradle_dependencies]
+[animation]
 
-custom_maven_repositories=PackedStringArray()
-dependencies=PackedStringArray()
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
-[input]
+[application]
+
+config/name="Calabozos: Guerra de Facciones"
+config/description="A two-player card battle game featuring three factions: Humans, Orcs, and Elves"
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.6")
+config/icon="res://icon.svg"
+
+[debug]
+
+gdscript/warnings/unused_class_variable=1
 
 [localization]
 
 translations=PackedStringArray("res://i18n/translations.csv")
 locale_filter=[0, ["es", "en", "pt"]]
 translation_remaps={}
-
-[debug]
-
-gdscript/warnings/unused_variable=1
-gdscript/warnings/unused_signal=1
-gdscript/warnings/unused_class_variable=1
-

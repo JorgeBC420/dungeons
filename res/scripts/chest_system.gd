@@ -52,7 +52,9 @@ func open_chest(chest_type: ChestType) -> Dictionary:
 	
 	chest_opened.emit(chest_type, coins, cards_count)
 	
-	print("CHEST OPENED: %s - Coins: %d, Cards: %d" % [ChestType.keys()[chest_type], coins, cards_count])
+	var chest_type_names = {ChestType.COMMON: "COMMON", ChestType.RARE: "RARE", ChestType.EPIC: "EPIC", ChestType.LEGENDARY: "LEGENDARY"}
+	var chest_name = chest_type_names.get(chest_type, "UNKNOWN")
+	print("CHEST OPENED: %s - Coins: %d, Cards: %d" % [chest_name, coins, cards_count])
 	
 	return reward
 
