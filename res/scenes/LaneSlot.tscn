@@ -5,8 +5,6 @@
 [node name="LaneSlot" type="PanelContainer"]
 custom_minimum_size = Vector2(200, 260)
 script = ExtResource("1")
-title_label = NodePath("VBoxContainer/title_label")
-card_holder = NodePath("VBoxContainer/CenterContainer/card_holder")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2

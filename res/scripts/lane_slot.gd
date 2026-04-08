@@ -6,10 +6,13 @@ signal card_dropped(hand_index: int, lane_index: int, player: int)
 
 @export var lane_index: int = 0
 @export var player_side: int = 0
-@export var title_label: Label
-@export var card_holder: Control
+
+var title_label: Label
+var card_holder: Control
 
 func _ready() -> void:
+	title_label = $"VBoxContainer/title_label" as Label
+	card_holder = $"VBoxContainer/CenterContainer/card_holder" as Control
 	_update_title()
 
 func _update_title() -> void:
