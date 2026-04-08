@@ -27,11 +27,12 @@ func _update_ui() -> void:
 	if card_unit == null:
 		return
 
-	name_label.text = card_unit.data.name
-	stats_label.text = "ATK %d / HP %d" % [card_unit.data.atk, card_unit.data.hp]
-	faction_label.text = card_unit.data.faction
-	role_label.text = card_unit.data.role
-	ability_label.text = card_unit.data.ability
+	# Usar traducciones para nombres de cartas y habilidades
+	name_label.text = tr("card_%s_name" % card_unit.data.id)
+	stats_label.text = "%s %d / %s %d" % [tr("ui_atk"), card_unit.data.atk, tr("ui_hp"), card_unit.data.hp]
+	faction_label.text = tr("faction_%s" % card_unit.data.faction)
+	role_label.text = tr("role_%s" % card_unit.data.role)
+	ability_label.text = tr("ability_%s" % card_unit.data.ability)
 	rarity_label.text = card_unit.data.rarity
 	
 	# Cargar imagen

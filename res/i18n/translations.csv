@@ -63,8 +63,10 @@ role_legendary,Legendario,Legendary,Lendário
 faction_human,Humanos,Humans,Humanos
 faction_orc,Orcos,Orcs,Orcs
 faction_elf,Elfos,Elves,Elfos
-ui_base_player,Base jugador,Player Base,Base do Jogador
-ui_base_enemy,Base enemigo,Enemy Base,Base Inimiga
+ui_atk,ATK,ATK,ATK
+ui_hp,HP,HP,HP
+ui_player_base,Base jugador,Player Base,Base do Jogador
+ui_enemy_base,Base enemiga,Enemy Base,Base Inimiga
 ui_turn,Turno,Turn,Turno
 ui_end_turn,Terminar Turno,End Turn,Encerrar Turno
 ui_ai_cards,Cartas IA,AI Cards,Cartas IA
@@ -72,3 +74,14 @@ ui_game_over,Fin de La Partida,Game Over,Fim do Jogo
 ui_victory_player,Victoria del jugador,Player Victory,Vitória do Jogador
 ui_victory_ai,Victoria de la IA,AI Victory,Vitória da IA
 ui_tie,Empate,Tie,Empate
+ui_coins,Monedas,Coins,Moedas
+chest_common,Cofre Común,Common Chest,Cofre Comum
+chest_rare,Cofre Raro,Rare Chest,Cofre Raro
+chest_epic,Cofre Épico,Epic Chest,Cofre Épico
+reward_coins,+%d Monedas,+%d Coins,+%d Moedas
+reward_common_chest,Cofre Común Desbloqueado,Common Chest Unlocked,Cofre Comum Desbloqueado
+reward_rare_chest,Cofre Raro Desbloqueado,Rare Chest Unlocked,Cofre Raro Desbloqueado
+reward_epic_chest,Cofre Épico Desbloqueado,Epic Chest Unlocked,Cofre Épico Desbloqueado
+ui_watch_ad,Ver Anuncio,Watch Ad,Ver Anúncio
+ui_watch_ad_coins,Ver Anuncio para +50 Monedas,Watch Ad for +50 Coins,Ver Anúncio por +50 Moedas
+ui_open_chest,Abrir Cofre,Open Chest,Abrir Cofre

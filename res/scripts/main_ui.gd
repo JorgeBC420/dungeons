@@ -51,11 +51,11 @@ func _refresh_hand(player: int) -> void:
 			player_hand_container.add_child(card_ui)
 			card_ui.setup(hand[i], i, GameManager.PLAYER_1)
 	else:
-		enemy_hand_info.text = "Cartas IA: %d" % game_manager.get_hand(GameManager.PLAYER_2).size()
+		enemy_hand_info.text = tr("ui_ai_cards") + ": %d" % game_manager.get_hand(GameManager.PLAYER_2).size()
 
 func _refresh_board() -> void:
-	player_base_label.text = "Base jugador: %d" % game_manager.base_hp[GameManager.PLAYER_1]
-	enemy_base_label.text = "Base enemigo: %d" % game_manager.base_hp[GameManager.PLAYER_2]
+	player_base_label.text = tr("ui_player_base") + ": %d" % game_manager.base_hp[GameManager.PLAYER_1]
+	enemy_base_label.text = tr("ui_enemy_base") + ": %d" % game_manager.base_hp[GameManager.PLAYER_2]
 
 	for lane_idx in range(3):
 		_clear_holder(player_lane_slots[lane_idx].card_holder)
