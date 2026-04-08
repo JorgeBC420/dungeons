@@ -265,7 +265,7 @@ func _activate_on_play_ability(unit: CardUnit) -> void:
 			var enemy2 := _find_strongest_enemy(unit.data.owner)
 			var ally2 := _find_weakest_ally(unit.data.owner)
 			if enemy2 != null and ally2 != null:
-				var drained := min(2, enemy2.data.hp)
+				var drained: int = mini(2, enemy2.data.hp)
 				enemy2.receive_damage(drained)
 				ally2.heal(drained)
 
@@ -407,26 +407,26 @@ func _handle_death(unit: CardUnit, lane_index: int) -> void:
 	if unit == null:
 		return
 
-	var owner: int = unit.data.owner
-	graveyards[owner].append(unit)
+	var player_owner: int = unit.data.owner
+	graveyards[player_owner].append(unit)
 
 	if unit.data.ability == "steal_coin_on_death" and unit.data.silenced_turns <= 0:
-		var enemy: int = 1 - owner
+		var enemy: int = 1 - player_owner
 		coins[enemy] = maxi(0, coins[enemy] - 1)
-		coins[owner] += 1
+		coins[player_owner] += 1
 
-	if board[lane_index][owner] == unit:
-		board[lane_index][owner] = null
+	if board[lane_index][player_owner] == unit:
+		board[lane_index][player_owner] = null
 
 	_log("%s ha caído." % unit.data.name)
 	emit_signal("board_changed")
 
 func _heal_adjacent(unit: CardUnit, amount: int) -> void:
 	var lane: int = unit.data.lane
-	var owner: int = unit.data.owner
+	var player_owner: int = unit.data.owner
 	for other_lane in [lane - 1, lane + 1]:
 		if other_lane >= 0 and other_lane < LANE_COUNT:
-			var ally: CardUnit = board[other_lane][owner]
+			var ally: CardUnit = board[other_lane][player_owner]
 			if ally != null:
 				ally.heal(amount)
 
@@ -525,9 +525,9 @@ func _try_redirect_from_squire(target: CardUnit) -> CardUnit:
 	if target.data.id != "paladin_alba":
 		return null
 
-	var owner: int = target.data.owner
+	var player_owner: int = target.data.owner
 	for lane_index in range(LANE_COUNT):
-		var ally: CardUnit = board[lane_index][owner]
+		var ally: CardUnit = board[lane_index][player_owner]
 		if ally != null and ally.is_alive() and ally.data.id == "escudero_novato" and ally.data.silenced_turns <= 0:
 			return ally
 	return null
