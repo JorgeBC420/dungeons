@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://calabozos_main_scene"]
+[gd_scene load_steps=4 format=3 uid="uid://d8m2kx3w8ynhr"]
 
-[ext_resource type="Script" path="res://res/scripts/main_ui.gd" uid="uid://calabozos_main_ui" id="1"]
-[ext_resource type="Script" path="res://res/scripts/game_manager.gd" uid="uid://calabozos_game_manager" id="2"]
-[ext_resource type="PackedScene" path="res://res/scenes/LaneSlot.tscn" uid="uid://calabozos_lane_slot" id="3"]
+[ext_resource type="Script" path="res://res/scripts/main_ui.gd" id="1"]
+[ext_resource type="Script" path="res://res/scripts/game_manager.gd" id="2"]
+[ext_resource type="PackedScene" path="res://res/scenes/LaneSlot.tscn" id="3"]
 
 [node name="Main" type="Control"]
 layout_mode = 3

@@ -23,9 +23,9 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 		return false
 	if data.type != "card_from_hand":
 		return false
-	if data.owner != player_side:
+	if data.card_owner != player_side:
 		return false
 	return true
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
-	emit_signal("card_dropped", data.hand_index, lane_index, data.owner)
+	emit_signal("card_dropped", data.hand_index, lane_index, data.card_owner)
