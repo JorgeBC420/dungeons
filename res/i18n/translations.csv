@@ -1,0 +1,74 @@
+keys,es,en,pt
+card_paladin_alba_name,Paladín del Alba,Paladin of Dawn,Paladino da Aurora
+card_medico_campo_name,Médico de Campo,Field Medic,Médico de Campo
+card_caballero_real_name,Caballero Real,Royal Knight,Cavaleiro Real
+card_inquisidor_hierro_name,Inquisidor de Hierro,Iron Inquisitor,Inquisidor de Ferro
+card_arquero_muralla_name,Arquero de Muralla,Wall Archer,Arqueiro de Muralha
+card_herrero_imperial_name,Herrero Imperial,Imperial Blacksmith,Ferreiro Imperial
+card_hechicero_corte_name,Hechicero de la Corte,Court Sorcerer,Feiticeiro da Corte
+card_escudero_novato_name,Escudero Novato,Novice Squire,Escudeiro Aprendiz
+card_general_valerius_name,General Valerius,General Valerius,General Valerius
+card_berserker_feroz_name,Berserker Feroz,Fierce Berserker,Berserker Feroz
+card_chaman_sangre_name,Chamán de Sangre,Blood Shaman,Xamã de Sangue
+card_jinete_lobo_name,Jinete de Lobo,Wolf Rider,Cavaleiro do Lobo
+card_rompefilas_name,Rompefilas,Line Breaker,Quebra-Fileiras
+card_lanzador_hachas_name,Lanzador de Hachas,Axe Thrower,Lançador de Machados
+card_brujo_sombras_name,Brujo de las Sombras,Shadow Warlock,Bruxo das Sombras
+card_capataz_esclavos_name,Capataz de Esclavos,Slave Master,Capataz de Escravos
+card_trasgo_saqueador_name,Trasgo Saqueador,Goblin Looter,Goblin Saqueador
+card_gran_jefe_gromm_name,Gran Jefe Gromm,Grand Chief Gromm,Grande Chefe Gromm
+card_guardian_bosque_name,Guardián del Bosque,Forest Guardian,Guardião da Floresta
+card_curandero_sagrado_name,Curandero Sagrado,Holy Healer,Curandeiro Sagrado
+card_arquero_maestro_name,Arquero Maestro,Master Archer,Arqueiro Mestre
+card_asesino_sombrio_name,Asesino Sombrío,Shadow Assassin,Assassino Sombrio
+card_druida_formas_name,Druida de Formas,Druid of Forms,Druida de Formas
+card_cantante_viento_name,Cantante de Viento,Wind Singer,Cantor do Vento
+card_tejedora_hechizos_name,Tejedora de Hechizos,Spell Weaver,Tecelã de Feitiços
+card_explorador_silvano_name,Explorador Silvano,Sylvan Scout,Explorador Silvestre
+card_reina_estrellas_name,Reina de las Estrellas,Queen of Stars,Rainha das Estrelas
+ability_ignore_first_hit,Ignora el primer golpe,Ignore First Hit,Ignora o Primeiro Golpe
+ability_heal_adjacent,Cura adyacentes,Heal Adjacent,Cura Adjacentes
+ability_first_strike_bonus,Bono de Primer Ataque,First Strike Bonus,Bônus de Primeiro Ataque
+ability_silence,Silencia,Silence,Silencia
+ability_any_row_attack,Ataca cualquier fila,Any Row Attack,Ataca Qualquer Fileira
+ability_buff_ally,Refuerza aliado,Buff Ally,Reforça Aliado
+ability_small_aoe,Pequeño AoE,Small AoE,Pequeno AoE
+ability_bodyguard,Guardaespaldas,Bodyguard,Guarda-Costas
+ability_human_global_buff,Refuerzo Global Humano,Human Global Buff,Reforço Global Humano
+ability_fury,Furia,Fury,Fúria
+ability_life_drain_transfer,Drenar Vida,Life Drain Transfer,Drenar Vida
+ability_dodge_20,Esquiva 20%,Dodge 20%,Esquiva 20%
+ability_taunt,Provocar,Taunt,Provocação
+ability_bleed,Sangrado,Bleed,Sangramento
+ability_curse_half,Maldición Mitad,Curse Half,Maldição Metade
+ability_sacrifice_extra_attack,Sacrificio Extra,Sacrifice Extra Attack,Sacrifício Extra
+ability_revive_low_level,Revivir Bajo Nivel,Revive Low Level,Reviver Nível Baixo
+ability_triple_shot,Triple Disparo,Triple Shot,Triplo Disparo
+ability_transform_bear,Convertir en Oso,Transform Bear,Transformar em Urso
+ability_double_skill,Doble Habilidad,Double Skill,Habilidade Dupla
+ability_freeze,Congelar,Freeze,Congelar
+ability_scout,Explorador,Scout,Explorador
+ability_kill_strongest,Matar el Más Fuerte,Kill Strongest,Matar o Mais Forte
+ability_reflect_30,Refleja 30%,Reflect 30%,Reflete 30%
+ability_stealth_first_turn,Sigilo Turno 1,Stealth First Turn,Furtividade Turno 1
+ability_steal_coin_on_death,Robar Moneda al Morir,Steal Coin On Death,Roubar Moeda ao Morrer
+ability_immediate_attack,Ataque Inmediato,Immediate Attack,Ataque Imediato
+role_tank,Tanque,Tank,Tanque
+role_damage,Daño,Damage,Dano
+role_support,Soporte,Support,Apoio
+role_magic,Magia,Magic,Magia
+role_cannon,Cañón,Cannon,Canhão
+role_control,Control,Control,Controle
+role_legendary,Legendario,Legendary,Lendário
+faction_human,Humanos,Humans,Humanos
+faction_orc,Orcos,Orcs,Orcs
+faction_elf,Elfos,Elves,Elfos
+ui_base_player,Base jugador,Player Base,Base do Jogador
+ui_base_enemy,Base enemigo,Enemy Base,Base Inimiga
+ui_turn,Turno,Turn,Turno
+ui_end_turn,Terminar Turno,End Turn,Encerrar Turno
+ui_ai_cards,Cartas IA,AI Cards,Cartas IA
+ui_game_over,Fin de La Partida,Game Over,Fim do Jogo
+ui_victory_player,Victoria del jugador,Player Victory,Vitória do Jogador
+ui_victory_ai,Victoria de la IA,AI Victory,Vitória da IA
+ui_tie,Empate,Tie,Empate
