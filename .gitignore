@@ -1,0 +1,93 @@
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+
+# Imported translations (automatically generated from CSV)
+.godot/
+*.translation
+
+# Mono-specific ignores
+mono_crash.*.json
+.mono/
+data_*/
+mono/
+bin/
+obj/
+
+# Godot-specific ignores
+.godot/
+*.exe
+*.zip
+*.tar.gz
+*.apk
+*.aab
+
+# Editor cache/settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# IDE-specific
+*.pro
+*.user
+*.workspace
+
+# Build/export directories
+build/
+dist/
+releases/
+
+# Local user files
+user_data/
+user://
+
+# Temporary/cache files
+*.tmp
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Environment files
+.env
+.env.local
+
+# OS-specific
+Thumbs.db
+.DS_Store
+.directory
+
+# Project-specific
+res/assets/*/
+!res/assets/.gitkeep
+res/assets/humans/.gitkeep
+res/assets/orcs/.gitkeep
+res/assets/elf/.gitkeep
+
+# Encrypted save files (local only, never sync)
+user://calabozos_save.encrypted
+user://calabozos_save.backup
+user://calabozos_cloud_synced
+
+# Dependencies (if using Godot Async Await feature or other packages)
+node_modules/
+vendor/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# MacOS
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
