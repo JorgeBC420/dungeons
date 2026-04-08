@@ -2,8 +2,6 @@
 extends PanelContainer
 class_name CardView
 
-signal card_clicked(card_view: CardView)
-
 @export var portrait: TextureRect
 @export var name_label: Label
 @export var stats_label: Label
@@ -14,13 +12,13 @@ signal card_clicked(card_view: CardView)
 
 var card_unit: CardUnit
 var hand_index: int = -1
-var owner: int = 0
+var card_owner: int = 0
 var draggable := true
 
 func setup(unit: CardUnit, index: int, unit_owner: int) -> void:
 	card_unit = unit
 	hand_index = index
-	owner = unit_owner
+	card_owner = unit_owner
 	_update_ui()
 
 func _update_ui() -> void:
@@ -64,6 +62,6 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	return {
 		"type": "card_from_hand",
 		"hand_index": hand_index,
-		"owner": owner,
+		"owner": card_owner,
 		"card_id": card_unit.data.id
 	}
