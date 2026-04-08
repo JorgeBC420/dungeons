@@ -73,16 +73,18 @@ func _initialize_board() -> void:
 		})
 
 func _build_test_decks() -> void:
+	# PLAYER_1: Solo humanos (9 cartas únicas, sin duplicados)
 	decks[PLAYER_1] = [
-		"paladin_alba","medico_campo","caballero_real","inquisidor_hierro",
-		"arquero_muralla","herrero_imperial","hechicero_corte","escudero_novato",
-		"general_valerius","paladin_alba","arquero_muralla","herrero_imperial"
+		"paladin_alba", "medico_campo", "caballero_real", "inquisidor_hierro",
+		"arquero_muralla", "herrero_imperial", "hechicero_corte", "escudero_novato",
+		"general_valerius"
 	]
 
+	# PLAYER_2: Solo orcos (9 cartas únicas, sin duplicados)
 	decks[PLAYER_2] = [
-		"berserker_feroz","chaman_sangre","jinete_lobo","rompefilas",
-		"lanzador_hachas","brujo_sombras","capataz_esclavos","trasgo_saqueador",
-		"gran_jefe_gromm","guardian_bosque","arquero_maestro","reina_estrellas"
+		"berserker_feroz", "chaman_sangre", "jinete_lobo", "rompefilas",
+		"lanzador_hachas", "brujo_sombras", "capataz_esclavos", "trasgo_saqueador",
+		"gran_jefe_gromm"
 	]
 
 	decks[PLAYER_1].shuffle()
@@ -308,6 +310,17 @@ func _activate_on_play_ability(unit: CardUnit) -> void:
 
 		"human_global_buff":
 			_buff_all_humans(unit.data.owner, 1)
+
+		"fury":
+			# Fury es pasivo: suma (max_hp - hp) al ataque
+			# Ya está implementado en get_effective_attack() → get_attack_bonus_from_missing_hp()
+			_log("%s entra en furia (ATK +%d por HP perdido)." % [unit.data.name, unit.get_attack_bonus_from_missing_hp()])
+
+		"any_row_attack":
+			# Arquero de Muralla: ataca diferentes carriles
+			var target_lane = _find_best_target_lane_for_archer(unit.data.owner, unit.data.lane)
+			if target_lane >= 0:
+				resolve_lane_combat_custom(target_lane, unit.data.owner, unit)
 
 func resolve_lane_combat(lane_index: int, attacking_player: int) -> void:
 	var attacker: CardUnit = board[lane_index][attacking_player]
@@ -574,6 +587,78 @@ func unlink_google_play_account() -> void:
 	secure_save.clear_cloud_sync()
 	game_mode.set_mode(GameMode.Mode.GUEST)
 	_log("Cuenta de Google Play desvinculada")
+
+## FUNCIONES AUXILIARES PARA any_row_attack
+
+func _find_best_target_lane_for_archer(archer_player: int, archer_lane: int) -> int:
+	"""Encuentra el mejor carril diferente al del arquero para atacar"""
+	var best_lane = -1
+	var best_score = -999
+	
+	for lane_idx in range(LANE_COUNT):
+		# No atacar el mismo carril donde está
+		if lane_idx == archer_lane:
+			continue
+		
+		var defender = board[lane_idx][1 - archer_player]
+		
+		# Priorizar carriles con enemigos
+		if defender != null:
+			var score = defender.get_effective_attack() + defender.data.hp
+			if score > best_score:
+				best_score = score
+				best_lane = lane_idx
+	
+	# Si no hay enemigos en otros carriles, atacar base (carril -1 es base)
+	if best_lane < 0:
+		best_lane = 0  # Carril vacío por defecto
+	
+	return best_lane
+
+func resolve_lane_combat_custom(lane_index: int, attacking_player: int, attacker: CardUnit) -> void:
+	"""Resuelve combate en un carril específico con un atacante definido
+	Usado por any_row_attack para atacar desde un carril diferente"""
+	var defender: CardUnit = board[lane_index][1 - attacking_player]
+
+	if not attacker.is_alive() or not attacker.can_act():
+		return
+	
+	if attacker.data.has_attacked_this_turn:
+		return
+
+	if defender == null:
+		base_hp[1 - attacking_player] -= attacker.get_effective_attack()
+		attacker.data.has_attacked_this_turn = true
+		_log("%s (arquero) golpea la base enemiga desde carril distante por %d." % [attacker.data.name, attacker.get_effective_attack()])
+		_check_game_over()
+		return
+
+	var attack_value := _calculate_attack_power(attacker, defender)
+
+	if attacker.data.ability == "first_strike_bonus" and attacker.data.silenced_turns <= 0:
+		attack_value = int(round(attack_value * 1.5))
+
+	if defender.data.dodge_chance > 0.0 and rng.randf() <= defender.data.dodge_chance:
+		attacker.data.has_attacked_this_turn = true
+		_log("%s esquiva el ataque a distancia de %s." % [defender.data.name, attacker.data.name])
+		return
+
+	var damage_done := defender.receive_damage(attack_value)
+	_log("%s (arquero) ataca a distancia a %s por %d." % [attacker.data.name, defender.data.name, damage_done])
+
+	if defender.data.reflect_ratio > 0.0 and defender.data.silenced_turns <= 0:
+		var reflected := int(round(damage_done * defender.data.reflect_ratio))
+		attacker.receive_damage(reflected)
+		_log("%s refleja %d de daño." % [defender.data.name, reflected])
+
+	if not defender.is_alive():
+		_handle_death(defender, lane_index)
+
+	if not attacker.is_alive():
+		_handle_death(attacker, attacker.data.lane)
+
+	attacker.data.has_attacked_this_turn = true
+	_check_game_over()
 
 func _log(text: String) -> void:
 	emit_signal("log_updated", text)
