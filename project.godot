@@ -33,7 +33,7 @@ dependencies=PackedStringArray()
 
 [localization]
 
-translations=PackedStringArray()
+translations=PackedStringArray("res://i18n/translations.csv")
 locale_filter=[0, ["es", "en", "pt"]]
 translation_remaps={}
 

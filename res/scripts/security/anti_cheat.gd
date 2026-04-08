@@ -200,14 +200,30 @@ func _log_tamper(reason: String, details: String) -> void:
 	push_error("ANTI-CHEAT: %s - %s" % [reason, details])
 
 func _verify_game_integrity() -> void:
-	"""Verifica que los datos del juego no hayan sido modificados"""
+	"""Verifica que los datos del juego no hayan sido modificados
+	Nota: Valida la estructura del CardDatabase, NO valores calculados (atk/hp)
+	Los valores calculados se validan cuando se instancia CardUnit en play_card_from_hand()
+	"""
 	var card_data = CardDatabase.get_card_data()
 	
-	# Verificar que todas las cartas sean válidas
+	# Verificar que todas las cartas tengan estructura válida
 	for card_id in card_data.keys():
 		var card = card_data[card_id]
-		if not validate_card_data(card):
-			_log_tamper("Invalid card in database", card_id)
+		
+		# Validar estructura base (sin requerer atk/hp que se calculan al instanciar)
+		if not card.has_all(["id", "name", "faction", "role", "ability", "level"]):
+			_log_tamper("Invalid card structure in database", card_id)
+			continue
+		
+		# Validar facción, rol, habilidad (estructura, no cálculos)
+		if card.faction not in VALID_FACTIONS:
+			_log_tamper("Invalid faction in database", "%s: %s" % [card_id, card.faction])
+		
+		if card.role not in VALID_ROLES:
+			_log_tamper("Invalid role in database", "%s: %s" % [card_id, card.role])
+		
+		if card.ability not in VALID_ABILITIES:
+			_log_tamper("Invalid ability in database", "%s: %s" % [card_id, card.ability])
 
 func get_tamper_report() -> Dictionary:
 	"""Obtiene un reporte de intentos de trampa"""

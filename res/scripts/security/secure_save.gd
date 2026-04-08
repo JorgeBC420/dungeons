@@ -6,7 +6,7 @@ class_name SecureSave
 
 const SAVE_PATH = "user://calabozos_save.encrypted"
 const SAVE_BACKUP_PATH = "user://calabozos_save.backup"
-const ENCRYPTION_KEY = "calabozos_game_2024_secure"  # En producción usar variable de entorno
+const DEVICE_KEY_PATH = "user://calabozos_device.key"
 
 # Rutas para sincronización con Google Play
 const CLOUD_SYNC_MARKER = "user://calabozos_cloud_synced"
@@ -14,10 +14,13 @@ const CLOUD_SYNC_MARKER = "user://calabozos_cloud_synced"
 var crypto = Crypto.new()
 var anti_cheat: AntiCheat
 var game_mode: GameMode
+var _device_encryption_key: String = ""  # Se genera/carga en _ready()
 
 func _ready() -> void:
 	anti_cheat = AntiCheat.new()
 	add_child(anti_cheat)
+	# Cargar o generar clave de encriptación por dispositivo
+	_device_encryption_key = _get_or_create_device_key()
 	# GameMode debe ser inyectado por GameManager
 	# game_mode se asigna externamente
 
@@ -121,9 +124,9 @@ func load_player_data() -> SaveData:
 	return save_data
 
 func _encrypt_data(data: String) -> PackedByteArray:
-	"""Encripta datos usando AES-256-GCM"""
+	"""Encripta datos usando AES-256-GCM con clave generada por dispositivo"""
 	try:
-		var key = ENCRYPTION_KEY.sha256_buffer()
+		var key = _device_encryption_key.sha256_buffer()
 		var iv = crypto.generate_random_bytes(16)
 		
 		var plaintext = data.to_utf8_buffer()
@@ -136,9 +139,9 @@ func _encrypt_data(data: String) -> PackedByteArray:
 		return null
 
 func _decrypt_data(encrypted: PackedByteArray) -> String:
-	"""Desencripta datos usando AES-256-GCM"""
+	"""Desencripta datos usando AES-256-GCM con clave generada por dispositivo"""
 	try:
-		var key = ENCRYPTION_KEY.sha256_buffer()
+		var key = _device_encryption_key.sha256_buffer()
 		
 		# Separar IV y ciphertext
 		var iv = encrypted.slice(0, 16)
@@ -152,6 +155,35 @@ func _decrypt_data(encrypted: PackedByteArray) -> String:
 		return plaintext.get_string_from_utf8()
 	except:
 		return null
+
+func _get_or_create_device_key() -> String:
+	"""Obtiene o crea una clave de encriptación única por dispositivo
+	La clave se genera usando OS.get_unique_id() + timestamp
+	Se almacena en user://calabozos_device.key
+	"""
+	# Si ya existe, cargar la clave guardada
+	if ResourceLoader.exists(DEVICE_KEY_PATH):
+		var file = FileAccess.open(DEVICE_KEY_PATH, FileAccess.READ)
+		if file != null:
+			var stored_key = file.get_as_text()
+			if stored_key != "":
+				print("Device encryption key loaded from storage")
+				return stored_key
+	
+	# Generar nueva clave única para el dispositivo
+	var unique_id = OS.get_unique_id()  # ID único del dispositivo
+	var timestamp = str(Time.get_ticks_msec())
+	var device_key = "%s_%s" % [unique_id, timestamp]
+	
+	# Guardar la clave para futuras sesiones
+	var file = FileAccess.open(DEVICE_KEY_PATH, FileAccess.WRITE)
+	if file != null:
+		file.store_string(device_key)
+		print("Device encryption key generated and stored")
+	else:
+		push_warning("Failed to store device encryption key")
+	
+	return device_key
 
 func _calculate_checksum(data: Dictionary) -> String:
 	"""Calcula un checksum para verificar integridad"""
