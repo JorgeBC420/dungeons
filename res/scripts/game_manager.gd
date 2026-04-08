@@ -430,8 +430,8 @@ func _heal_adjacent(unit: CardUnit, amount: int) -> void:
 			if ally != null:
 				ally.heal(amount)
 
-func _damage_all_enemies(owner: int, amount: int) -> void:
-	var enemy: int = 1 - owner
+func _damage_all_enemies(player_id: int, amount: int) -> void:
+	var enemy: int = 1 - player_id
 	for lane_index in range(LANE_COUNT):
 		var target: CardUnit = board[lane_index][enemy]
 		if target != null:
@@ -439,8 +439,8 @@ func _damage_all_enemies(owner: int, amount: int) -> void:
 			if not target.is_alive():
 				_handle_death(target, lane_index)
 
-func _find_strongest_enemy(owner: int) -> CardUnit:
-	var enemy: int = 1 - owner
+func _find_strongest_enemy(player_id: int) -> CardUnit:
+	var enemy: int = 1 - player_id
 	var best: CardUnit = null
 	var best_power := -99999
 	for lane_index in range(LANE_COUNT):
@@ -452,11 +452,11 @@ func _find_strongest_enemy(owner: int) -> CardUnit:
 				best = u
 	return best
 
-func _find_best_ally_except(owner: int, excluded: CardUnit) -> CardUnit:
+func _find_best_ally_except(player_id: int, excluded: CardUnit) -> CardUnit:
 	var best: CardUnit = null
 	var best_score := -99999
 	for lane_index in range(LANE_COUNT):
-		var u: CardUnit = board[lane_index][owner]
+		var u: CardUnit = board[lane_index][player_id]
 		if u != null and u != excluded and u.is_alive():
 			var score: int = u.get_effective_attack() + u.data.hp
 			if score > best_score:
@@ -464,34 +464,34 @@ func _find_best_ally_except(owner: int, excluded: CardUnit) -> CardUnit:
 				best = u
 	return best
 
-func _find_weakest_ally(owner: int, excluded: CardUnit = null) -> CardUnit:
+func _find_weakest_ally(player_id: int, excluded: CardUnit = null) -> CardUnit:
 	var weakest: CardUnit = null
 	var weakest_hp := 99999
 	for lane_index in range(LANE_COUNT):
-		var u: CardUnit = board[lane_index][owner]
+		var u: CardUnit = board[lane_index][player_id]
 		if u != null and u != excluded and u.is_alive():
 			if u.data.hp < weakest_hp:
 				weakest_hp = u.data.hp
 				weakest = u
 	return weakest
 
-func _revive_low_level(owner: int) -> void:
-	if graveyards[owner].is_empty():
+func _revive_low_level(player_id: int) -> void:
+	if graveyards[player_id].is_empty():
 		return
 
-	for dead in graveyards[owner]:
+	for dead in graveyards[player_id]:
 		if dead.data.level <= 2:
 			for lane_index in range(LANE_COUNT):
-				if board[lane_index][owner] == null:
+				if board[lane_index][player_id] == null:
 					dead.data.hp = max(1, int(dead.data.max_hp / 2))
 					dead.data.lane = lane_index
-					board[lane_index][owner] = dead
-					graveyards[owner].erase(dead)
+					board[lane_index][player_id] = dead
+					graveyards[player_id].erase(dead)
 					_log("%s revive a %s." % ["Curandero Sagrado", dead.data.name])
 					return
 
-func _random_damage_to_enemies(owner: int, shots: int, damage: int) -> void:
-	var enemy := 1 - owner
+func _random_damage_to_enemies(player_id: int, shots: int, damage: int) -> void:
+	var enemy := 1 - player_id
 	var enemy_units := []
 	for lane_index in range(LANE_COUNT):
 		var u: CardUnit = board[lane_index][enemy]
@@ -515,9 +515,9 @@ func _peek_next_card(player: int) -> String:
 		return ""
 	return decks[player][-1]
 
-func _buff_all_humans(owner: int, amount: int) -> void:
+func _buff_all_humans(player_id: int, amount: int) -> void:
 	for lane_index in range(LANE_COUNT):
-		var u: CardUnit = board[lane_index][owner]
+		var u: CardUnit = board[lane_index][player_id]
 		if u != null and u.data.faction == CardDatabase.FACTION_HUMAN:
 			u.data.atk += amount
 
