@@ -171,7 +171,7 @@ func ai_take_turn() -> void:
 	if current_player != PLAYER_2:
 		return
 
-	var available_lanes := []
+	var available_lanes: Array[int] = []
 	for i in range(LANE_COUNT):
 		if board[i][PLAYER_2] == null:
 			available_lanes.append(i)
@@ -186,13 +186,13 @@ func ai_take_turn() -> void:
 		end_turn()
 		return
 
-	var chosen_lane := available_lanes[rng.randi_range(0, available_lanes.size() - 1)]
+	var chosen_lane: int = available_lanes[rng.randi_range(0, available_lanes.size() - 1)]
 
 	var best_hand_index := 0
 	var best_score := -99999
 	for i in range(hands[PLAYER_2].size()):
 		var c: CardUnit = hands[PLAYER_2][i]
-		var score := c.data.atk + c.data.hp
+		var score: int = c.data.atk + c.data.hp
 		if board[chosen_lane][PLAYER_1] != null and has_faction_advantage(c.data.faction, board[chosen_lane][PLAYER_1].data.faction):
 			score += 5
 		if score > best_score:
@@ -277,7 +277,7 @@ func _activate_on_play_ability(unit: CardUnit) -> void:
 		"sacrifice_extra_attack":
 			var victim := _find_weakest_ally(unit.data.owner, unit)
 			if victim != null:
-				var lane_victim := victim.data.lane
+				var lane_victim: int = victim.data.lane
 				victim.receive_damage(999)
 				_handle_death(victim, lane_victim)
 				resolve_lane_combat(unit.data.lane, unit.data.owner)
@@ -312,7 +312,7 @@ func _activate_on_play_ability(unit: CardUnit) -> void:
 		"kill_strongest":
 			var strongest := _find_strongest_enemy(unit.data.owner)
 			if strongest != null:
-				var lane := strongest.data.lane
+				var lane: int = strongest.data.lane
 				strongest.receive_damage(999)
 				_handle_death(strongest, lane)
 
@@ -326,7 +326,7 @@ func _activate_on_play_ability(unit: CardUnit) -> void:
 
 		"any_row_attack":
 			# Arquero de Muralla: ataca diferentes carriles
-			var target_lane = _find_best_target_lane_for_archer(unit.data.owner, unit.data.lane)
+			var target_lane: int = _find_best_target_lane_for_archer(unit.data.owner, unit.data.lane)
 			if target_lane >= 0:
 				resolve_lane_combat_custom(target_lane, unit.data.owner, unit)
 
@@ -407,11 +407,11 @@ func _handle_death(unit: CardUnit, lane_index: int) -> void:
 	if unit == null:
 		return
 
-	var owner := unit.data.owner
+	var owner: int = unit.data.owner
 	graveyards[owner].append(unit)
 
 	if unit.data.ability == "steal_coin_on_death" and unit.data.silenced_turns <= 0:
-		var enemy := 1 - owner
+		var enemy: int = 1 - owner
 		coins[enemy] = maxi(0, coins[enemy] - 1)
 		coins[owner] += 1
 
@@ -422,8 +422,8 @@ func _handle_death(unit: CardUnit, lane_index: int) -> void:
 	emit_signal("board_changed")
 
 func _heal_adjacent(unit: CardUnit, amount: int) -> void:
-	var lane := unit.data.lane
-	var owner := unit.data.owner
+	var lane: int = unit.data.lane
+	var owner: int = unit.data.owner
 	for other_lane in [lane - 1, lane + 1]:
 		if other_lane >= 0 and other_lane < LANE_COUNT:
 			var ally: CardUnit = board[other_lane][owner]
@@ -431,7 +431,7 @@ func _heal_adjacent(unit: CardUnit, amount: int) -> void:
 				ally.heal(amount)
 
 func _damage_all_enemies(owner: int, amount: int) -> void:
-	var enemy := 1 - owner
+	var enemy: int = 1 - owner
 	for lane_index in range(LANE_COUNT):
 		var target: CardUnit = board[lane_index][enemy]
 		if target != null:
@@ -440,13 +440,13 @@ func _damage_all_enemies(owner: int, amount: int) -> void:
 				_handle_death(target, lane_index)
 
 func _find_strongest_enemy(owner: int) -> CardUnit:
-	var enemy := 1 - owner
+	var enemy: int = 1 - owner
 	var best: CardUnit = null
 	var best_power := -99999
 	for lane_index in range(LANE_COUNT):
 		var u: CardUnit = board[lane_index][enemy]
 		if u != null and u.is_alive():
-			var power := u.get_effective_attack() + u.data.hp
+			var power: int = u.get_effective_attack() + u.data.hp
 			if power > best_power:
 				best_power = power
 				best = u
@@ -458,7 +458,7 @@ func _find_best_ally_except(owner: int, excluded: CardUnit) -> CardUnit:
 	for lane_index in range(LANE_COUNT):
 		var u: CardUnit = board[lane_index][owner]
 		if u != null and u != excluded and u.is_alive():
-			var score := u.get_effective_attack() + u.data.hp
+			var score: int = u.get_effective_attack() + u.data.hp
 			if score > best_score:
 				best_score = score
 				best = u
@@ -525,7 +525,7 @@ func _try_redirect_from_squire(target: CardUnit) -> CardUnit:
 	if target.data.id != "paladin_alba":
 		return null
 
-	var owner := target.data.owner
+	var owner: int = target.data.owner
 	for lane_index in range(LANE_COUNT):
 		var ally: CardUnit = board[lane_index][owner]
 		if ally != null and ally.is_alive() and ally.data.id == "escudero_novato" and ally.data.silenced_turns <= 0:
