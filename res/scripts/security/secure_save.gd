@@ -198,18 +198,19 @@ func _validate_save_data(save_data: SaveData) -> bool:
 		push_error("Invalid coins value: %d" % save_data.coins)
 		return false
 	
-	# Validar inventario
+	# Validar inventario (solo valida valores que se guardan: copies y level)
 	for card_id in save_data.inventory.keys():
 		var card_info = save_data.inventory[card_id]
 		
-		if not card_info.has_all(["copies", "level", "unlocked"]):
-			return false
+		# Nota: SaveData solo guarda 'copies' y 'level' cuando difieren del default
+		# No incluye 'unlocked' ni otros campos (se calcula en CardUnit)
+		if card_info.has("level"):
+			if card_info.level < 1 or card_info.level > 10:
+				return false
 		
-		if card_info.level < 1 or card_info.level > 10:
-			return false
-		
-		if card_info.copies < 0 or card_info.copies > 999:
-			return false
+		if card_info.has("copies"):
+			if card_info.copies < 0 or card_info.copies > 999:
+				return false
 	
 	return true
 
@@ -219,10 +220,27 @@ func _validate_loaded_data(data: Dictionary) -> bool:
 	if not data.has("inventory") or not data.has("coins"):
 		return false
 	
-	if not isinstance(data.coins, int):
+	if typeof(data.coins) != TYPE_INT:
 		return false
 	
-	return _validate_save_data(SaveData.new())
+	# Validar estructura del inventario cargado
+	if typeof(data.inventory) != TYPE_DICTIONARY:
+		return false
+	
+	for card_id in data.inventory.keys():
+		var card_info = data.inventory[card_id]
+		
+		if not typeof(card_info) == TYPE_DICTIONARY:
+			return false
+		
+		# Validar que los campos son tipos válidos
+		if card_info.has("level") and typeof(card_info.level) != TYPE_INT:
+			return false
+		
+		if card_info.has("copies") and typeof(card_info.copies) != TYPE_INT:
+			return false
+	
+	return true
 
 func _load_from_backup() -> SaveData:
 	"""Intenta cargar desde el backup si la carga principal falla"""

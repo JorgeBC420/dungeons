@@ -26,17 +26,13 @@ func _ready() -> void:
 	_verify_game_integrity()
 
 func validate_card_data(card_data: Dictionary) -> bool:
-	"""Valida que los datos de una carta sean legítimos"""
-	
-	if not card_data.has_all(["id", "name", "faction", "role", "ability", "level"]):
+		"""Valida que los datos de una carta sean legítimos
+		Nota: 'level' se calcula en CardUnit basado en save_data, no se valida en estructura
+		atk/hp también se calculan dinámicamente en CardUnit
+		"""
+		
+		if not card_data.has_all(["id", "name", "faction", "role", "ability"]):
 		_log_tamper("Invalid card structure", str(card_data))
-		return false
-	
-	# Validar facción
-	if card_data.faction not in VALID_FACTIONS:
-		_log_tamper("Invalid faction", card_data.faction)
-		return false
-	
 	# Validar rol
 	if card_data.role not in VALID_ROLES:
 		_log_tamper("Invalid role", card_data.role)
@@ -161,7 +157,8 @@ func _validate_stats(card_data: Dictionary) -> bool:
 	var atk = card_data.get("atk", -1)
 	var hp = card_data.get("hp", -1)
 	
-	if not isinstance(atk, int) or not isinstance(hp, int):
+	# Usar typeof() en lugar de isinstance() (no existe en GDScript 4)
+	if typeof(atk) != TYPE_INT or typeof(hp) != TYPE_INT:
 		return false
 	
 	if atk < MIN_STAT_VALUE or atk > MAX_STAT_VALUE:
