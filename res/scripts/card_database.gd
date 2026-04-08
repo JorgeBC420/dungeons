@@ -25,7 +25,7 @@ const BASE_STATS := {
 }
 
 static func get_stats_for_role(role: String, level: int) -> Dictionary:
-	var base := BASE_STATS.get(role, {"atk": 4, "hp": 6})
+	var base: Dictionary = BASE_STATS.get(role, {"atk": 4, "hp": 6})
 	return {
 		"atk": base.atk + (level - 1),
 		"hp": base.hp + ((level - 1) * 2)
@@ -150,7 +150,7 @@ static func get_card_data() -> Dictionary:
 	}
 
 static func create_card_instance(card_id: String, level: int = 1) -> Dictionary:
-	var data := get_card_data().get(card_id, {})
+	var data: Dictionary = get_card_data().get(card_id, {})
 	if data.is_empty():
 		push_error("Carta no encontrada: %s" % card_id)
 		return {}
