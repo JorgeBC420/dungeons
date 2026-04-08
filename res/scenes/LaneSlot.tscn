@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b3l6p8x4gvm5r"]
 
-[ext_resource type="Script" path="res://scripts/lane_slot.gd"]
+[ext_resource type="Script" path="res://res/scripts/lane_slot.gd" id="1"]
 
 [node name="LaneSlot" type="PanelContainer"]
 custom_minimum_size = Vector2(200, 260)
