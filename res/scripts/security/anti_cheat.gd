@@ -26,13 +26,20 @@ func _ready() -> void:
 	_verify_game_integrity()
 
 func validate_card_data(card_data: Dictionary) -> bool:
-		"""Valida que los datos de una carta sean legítimos
-		Nota: 'level' se calcula en CardUnit basado en save_data, no se valida en estructura
-		atk/hp también se calculan dinámicamente en CardUnit
-		"""
-		
-		if not card_data.has_all(["id", "name", "faction", "role", "ability"]):
+	"""Valida que los datos de una carta sean legítimos
+	Nota: 'level' se calcula en CardUnit basado en save_data, no se valida en estructura
+	atk/hp también se calculan dinámicamente en CardUnit
+	"""
+	
+	if not card_data.has_all(["id", "name", "faction", "role", "ability"]):
 		_log_tamper("Invalid card structure", str(card_data))
+		return false
+	
+	# Validar facción
+	if card_data.faction not in VALID_FACTIONS:
+		_log_tamper("Invalid faction", card_data.faction)
+		return false
+	
 	# Validar rol
 	if card_data.role not in VALID_ROLES:
 		_log_tamper("Invalid role", card_data.role)
@@ -207,8 +214,8 @@ func _verify_game_integrity() -> void:
 	for card_id in card_data.keys():
 		var card = card_data[card_id]
 		
-		# Validar estructura base (sin requerer atk/hp que se calculan al instanciar)
-		if not card.has_all(["id", "name", "faction", "role", "ability", "level"]):
+		# Validar estructura base (sin requerer atk/hp/level que se calculan al instanciar)
+		if not card.has_all(["id", "name", "faction", "role", "ability"]):
 			_log_tamper("Invalid card structure in database", card_id)
 			continue
 		

@@ -297,35 +297,19 @@ func delete_save_data() -> bool:
 	print("Save data deleted")
 	return true
 
-## SINCRONIZACIÓN EN NUBE (Google Play)
+## SINCRONIZACIÓN EN NUBE (Google Play) - DESACTIVADA TEMPORALMENTE
 
 ## Sincroniza datos a la nube (Solo en modo ACCOUNT con Google Play)
-## En modo GUEST: Los datos se guardan solo localmente sin sincronización
+## NOTA: Desactivada temporalmente para reducir acoplamiento
+## TODO: Implementar después de validar core gameplay
 func sync_to_cloud(save_data: SaveData) -> bool:
-	"""Sincroniza datos a Google Play (modo account solamente)"""
+	"""Sincroniza datos a Google Play (modo account solamente)
+	TEMPORALMENTE DESACTIVADO: Todos los datos se guardan solo localmente
+	Se implementará post-lanzamiento cuando sea necesario
+	"""
 	
-	if game_mode == null:
-		push_error("GameMode not initialized")
-		return false
-	
-	# En modo guest, los datos se guardan localmente pero NO se sincronizan
-	if game_mode.is_guest_mode():
-		print("Guest mode: Data saved locally only (no cloud sync)")
-		return true  # No es un error, es el comportamiento esperado
-	
-	# En modo account sin Google Play, datos se guardan localmente pero NO se sincronizan
-	if game_mode.is_account_mode() and game_mode.player_email == "":
-		print("Account mode without Google Play: Data saved locally only (no cloud sync)")
-		return true
-	
-	# En modo account con Google Play, se sincroniza (implementación futura)
-	print("Account mode with Google Play: Syncing data to cloud...")
-	
-	# TODO: Aquí iría la integración real con Google Play Games Services o Firebase
-	# Por ahora, marcamos que se intentó sincronizar
-	var timestamp = Time.get_ticks_msec()
-	_mark_cloud_synced(timestamp)
-	
+	# Desactivada temporalmente - solo guardar localmente
+	print("Cloud sync: Temporarily disabled - data saved locally only")
 	return true
 
 ## Marca que los datos fueron sincronizados a la nube
