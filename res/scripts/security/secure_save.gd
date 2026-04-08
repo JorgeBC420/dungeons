@@ -56,7 +56,7 @@ func save_player_data(save_data: SaveData) -> bool:
 	# Encriptar
 	var encrypted = _encrypt_data(json_string)
 	
-	if encrypted == null:
+	if encrypted.size() == 0:
 		push_error("Failed to encrypt save data")
 		return false
 	
@@ -88,7 +88,7 @@ func load_player_data() -> SaveData:
 	
 	# Desencriptar
 	var json_string = _decrypt_data(encrypted_data)
-	if json_string == null:
+	if json_string.is_empty():
 		push_error("Failed to decrypt save data")
 		return _load_from_backup()
 	
@@ -125,36 +125,47 @@ func load_player_data() -> SaveData:
 
 func _encrypt_data(data: String) -> PackedByteArray:
 	"""Encripta datos usando AES-256-GCM con clave generada por dispositivo"""
-	try:
-		var key = _device_encryption_key.sha256_buffer()
-		var iv = crypto.generate_random_bytes(16)
-		
-		var plaintext = data.to_utf8_buffer()
-		var ciphertext = crypto.encrypt_aes256_gcm(key, iv, plaintext)
-		
-		# Combinar IV + ciphertext
-		var result = iv + ciphertext
-		return result
-	except:
-		return null
+	if _device_encryption_key.is_empty():
+		push_error("Device encryption key not initialized")
+		return PackedByteArray()
+	
+	var key = _device_encryption_key.sha256_buffer()
+	var iv = crypto.generate_random_bytes(16)
+	
+	var plaintext = data.to_utf8_buffer()
+	var ciphertext = crypto.encrypt_aes256_gcm(key, iv, plaintext)
+	
+	if ciphertext == null or ciphertext.size() == 0:
+		push_error("Encryption failed")
+		return PackedByteArray()
+	
+	# Combinar IV + ciphertext
+	var result = iv + ciphertext
+	return result
 
 func _decrypt_data(encrypted: PackedByteArray) -> String:
 	"""Desencripta datos usando AES-256-GCM con clave generada por dispositivo"""
-	try:
-		var key = _device_encryption_key.sha256_buffer()
-		
-		# Separar IV y ciphertext
-		var iv = encrypted.slice(0, 16)
-		var ciphertext = encrypted.slice(16)
-		
-		var plaintext = crypto.decrypt_aes256_gcm(key, iv, ciphertext)
-		
-		if plaintext == null:
-			return null
-		
-		return plaintext.get_string_from_utf8()
-	except:
-		return null
+	if _device_encryption_key.is_empty():
+		push_error("Device encryption key not initialized")
+		return ""
+	
+	if encrypted.size() < 16:
+		push_error("Encrypted data too small")
+		return ""
+	
+	var key = _device_encryption_key.sha256_buffer()
+	
+	# Separar IV y ciphertext
+	var iv = encrypted.slice(0, 16)
+	var ciphertext = encrypted.slice(16)
+	
+	var plaintext = crypto.decrypt_aes256_gcm(key, iv, ciphertext)
+	
+	if plaintext == null or plaintext.size() == 0:
+		push_error("Decryption failed")
+		return ""
+	
+	return plaintext.get_string_from_utf8()
 
 func _get_or_create_device_key() -> String:
 	"""Obtiene o crea una clave de encriptación única por dispositivo
@@ -258,7 +269,7 @@ func _load_from_backup() -> SaveData:
 	var encrypted_data = file.get_var()
 	var json_string = _decrypt_data(encrypted_data)
 	
-	if json_string == null:
+	if json_string.is_empty():
 		return null
 	
 	var json = JSON.new()
