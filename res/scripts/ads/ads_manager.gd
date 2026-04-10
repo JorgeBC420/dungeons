@@ -5,7 +5,7 @@ class_name AdsManager
 ## Sistema de recompensas por publicidad
 ## Integración futura: Google Mobile Ads SDK
 
-enum RewardType { COINS, COMMON_CHEST, RARE_CHEST }
+enum RewardType { COINS, COMMON_CHEST, RARE_CHEST, CARDS }
 
 const REWARD_AMOUNTS = {
 	RewardType.COINS: 50,  # Monedas por ver anuncio

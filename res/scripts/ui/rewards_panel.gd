@@ -153,6 +153,26 @@ func _open_chest_from_ad(chest_type: ChestSystem.ChestType) -> void:
 		_log_reward("Error opening chest")
 		return
 	
+	if save_data:
+		save_data.coins += reward.get("coins", 0)
+		var cards_count = reward.get("cards", 0)
+		_log_reward("✅ Chest opened: +%d coins, +%d cards" % [reward.get("coins", 0), cards_count])
+	else:
+		_log_reward("Error: SaveData not found")
+
+## CALLBACK DE COFRES
+
+func _on_chest_opened(chest_type: ChestSystem.ChestType, coins: int, cards: int) -> void:
+	"""Llamado cuando se abre un cofre"""
+	_log_reward("📦 %s chest opened: +%d coins, +%d cards" % [chest_type, coins, cards])
+
+## LOG
+
+func _log_reward(text: String) -> void:
+	"""Añade texto al log de recompensas"""
+	if reward_log:
+		reward_log.append_text("\n" + text)
+	
 	# Otorgar monedas
 	save_data.coins += reward.coins
 	

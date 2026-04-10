@@ -4,7 +4,7 @@ class_name ChestSystem
 
 ## Sistema de cofres desbloqueables por publicidad
 
-enum ChestType { COMMON, RARE, EPIC }
+enum ChestType { COMMON, RARE, EPIC, LEGENDARY }
 
 const CHEST_REWARDS = {
 	ChestType.COMMON: {
