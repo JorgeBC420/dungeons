@@ -2,26 +2,46 @@
 extends Control
 class_name MainUI
 
-@export var game_manager_path: NodePath
-
-@export var player_hand_container: HBoxContainer
-@export var enemy_hand_info: Label
-
-@export var player_lane_slots: Array[LaneSlot]
-@export var enemy_lane_slots: Array[LaneSlot]
-
-@export var player_base_label: Label
-@export var enemy_base_label: Label
-@export var turn_label: Label
-@export var log_label: RichTextLabel
-
-@export var end_turn_button: Button
-@export var card_view_scene: PackedScene
-
 var game_manager: GameManager
+var player_hand_container: HBoxContainer
+var enemy_hand_info: Label
+var player_lane_slots: Array[LaneSlot]
+var enemy_lane_slots: Array[LaneSlot]
+var player_base_label: Label
+var enemy_base_label: Label
+var turn_label: Label
+var log_label: RichTextLabel
+var end_turn_button: Button
+var card_view_scene: PackedScene
 
 func _ready() -> void:
-	game_manager = get_node(game_manager_path)
+	# Obtener referencias automáticas
+	game_manager = get_node("GameManager") as GameManager
+	player_hand_container = get_node("VBoxContainer/HBoxContainer_PlayerHandArea/ScrollContainer/player_hand_container") as HBoxContainer
+	enemy_hand_info = get_node("VBoxContainer/Label_EnemyHandInfo") as Label
+	player_base_label = get_node("VBoxContainer/HBoxContainer_TopBar/player_base_label") as Label
+	enemy_base_label = get_node("VBoxContainer/HBoxContainer_TopBar/enemy_base_label") as Label
+	turn_label = get_node("VBoxContainer/HBoxContainer_TopBar/turn_label") as Label
+	log_label = get_node("VBoxContainer/RichTextLabel_Log") as RichTextLabel
+	end_turn_button = get_node("VBoxContainer/HBoxContainer_PlayerHandArea/Button_EndTurn") as Button
+	
+	# Obtener los lane slots
+	var enemy_lanes_container = get_node("VBoxContainer/HBoxContainer_EnemyLanes") as HBoxContainer
+	var player_lanes_container = get_node("VBoxContainer/HBoxContainer_PlayerLanes") as HBoxContainer
+	
+	enemy_lane_slots = [
+		enemy_lanes_container.get_child(0) as LaneSlot,
+		enemy_lanes_container.get_child(1) as LaneSlot,
+		enemy_lanes_container.get_child(2) as LaneSlot
+	]
+	player_lane_slots = [
+		player_lanes_container.get_child(0) as LaneSlot,
+		player_lanes_container.get_child(1) as LaneSlot,
+		player_lanes_container.get_child(2) as LaneSlot
+	]
+	
+	# CardView scene debe cargarse como recurso
+	card_view_scene = load("res://res/scenes/CardView.tscn")
 
 	game_manager.board_changed.connect(_refresh_board)
 	game_manager.hand_changed.connect(_refresh_hand)
